@@ -49,3 +49,26 @@ export default VisibleTodoList
 ```
 这就是 React Redux API 的基础，但还漏了一些快捷技巧和强大的配置。建议你仔细学习 它的文档。如果你担心 mapStateToProps 创建新对象太过频繁，可以学习如何使用 [reselect](https://github.com/reactjs/reselect) 来 [计算衍生数据](http://cn.redux.js.org/docs/recipes/ComputingDerivedData.html)。
 
+
+### 传入 Store
+
+所有容器组件都可以访问 Redux store，所以可以手动监听它。一种方式是把它以 props 的形式传入到所有容器组件中。但这太麻烦了，因为必须要用 store 把展示组件包裹一层，仅仅是因为恰好在组件树中渲染了一个容器组件。
+
+建议的方式是使用指定的 React Redux 组件 <Provider> 来 魔法般的 让所有容器组件都可以访问 store，而不必显示地传递它。只需要在渲染根组件时使用即可。
+  ```js
+  import React from 'react'
+import { render } from 'react-dom'
+import { Provider } from 'react-redux'
+import { createStore } from 'redux'
+import todoApp from './reducers'
+import App from './components/App'
+
+let store = createStore(todoApp)
+
+render(
+  <Provider store={store}>
+    <App />
+  </Provider>,
+  document.getElementById('root')
+)
+  ```
