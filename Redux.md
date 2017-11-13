@@ -47,5 +47,5 @@ const VisibleTodoList = connect(
 
 export default VisibleTodoList
 ```
-这就是 React Redux API 的基础，但还漏了一些快捷技巧和强大的配置。建议你仔细学习 它的文档。如果你担心 mapStateToProps 创建新对象太过频繁，可以学习如何使用 [reselect]((https://github.com/reactjs/reselect)) 来 [计算衍生数据](http://cn.redux.js.org/docs/recipes/ComputingDerivedData.html)。
+这就是 React Redux API 的基础，但还漏了一些快捷技巧和强大的配置。建议你仔细学习 它的文档。如果你担心 mapStateToProps 创建新对象太过频繁，可以学习如何使用 [reselect](https://github.com/reactjs/reselect) 来 [计算衍生数据](http://cn.redux.js.org/docs/recipes/ComputingDerivedData.html)。
 
