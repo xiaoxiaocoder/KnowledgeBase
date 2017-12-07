@@ -6,4 +6,4 @@
 + OS Version [操作系统类型和版本]: MacBook Pro,10.12.6
 
 **预期效果**
-![预期效果](./images/img.png)
+![预期效果](./Images/img.png)
