@@ -1,4 +1,4 @@
-##地图
+## 地图
 ### 地图上固定显示位置与数据源点关联
 #### Version & Environment [版本及环境]
 + ECharts version [ECharts 版本]:  3.8.5
