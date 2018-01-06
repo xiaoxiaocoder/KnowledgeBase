@@ -3,7 +3,7 @@
 2. 静态方法
 3. 实例： 使用Proxy实现观察者模式
 ---
--   [Go back to Home](../README.md)
+-   [Go back to Home](https://github.com/xiaoxiaocoder/KnowledgeBase)
 -   [Go back to es6 index page](../es6.md)
 
 1.
