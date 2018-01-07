@@ -92,7 +92,7 @@ Reflect对象一共有13个静态方法.
 -	Reflect.setPrototypeOf(target, prototype)
 大部分与Object对象的同名方法作用都是相同的, 而且与Proxy对象的方法是一一对应的.
 
-1.	Reflect.get(target, name, receiver)
+-	1.	Reflect.get(target, name, receiver)
 Reflect.get方法查找并返回target对象的name属性, 如果没有该属性, 则返回undefined
 ```js
 var myObject = {
@@ -130,7 +130,7 @@ Reflect.get(1, 'foo') // error
 Reflect.get(false, 'foo') //error
 ```
 
-2. Reflect.set(target, name, value, receiver)
+-	2. Reflect.set(target, name, value, receiver)
 Reflect.set方法设置target对象的name属性等于value
 ```js
 var myObject = {
@@ -215,7 +215,7 @@ Reflect.set(1, 'foo', {}) // 报错
 Reflect.set(false, 'foo', {}) // 报错
 ```
 
-3. Reflect.has(obj, name)
+-	3. Reflect.has(obj, name)
 Reflect.has 方法对应name in obj里的in运算符
 ```js
 var myObject = {
@@ -229,7 +229,7 @@ Reflect.has(myObject, 'foo') // true
 ```
 如果第一个参数不是对象, Reflect.has 和 in 运算符都会报错
 
-4. Reflect.deleteProperty(obj, name)
+-	4. Reflect.deleteProperty(obj, name)
 Reflect.deleteProperty方法等同于delete obj[name],用于删除删除对象的属性
 ```js
 const myObj = {foo: 'bar'}
@@ -242,7 +242,7 @@ Reflect.deleteProperty(myObj, 'foo')
 ```
 返回布尔值. 如果删除成功或者被删除的属性不存在, 返回true; 删除失败, 被删除的属性依然存在, 返回false
 
-5.	Reflect.construct(target, args)
+-	5.	Reflect.construct(target, args)
 Reflect.construct方法等同于new target(...args), 这提供一种不使用new, 来调用构造函数的方法
 ```js
 function Greeting(name) {
@@ -256,7 +256,7 @@ const instance = new Greeting('zhangsan')
 const instance = Reflect.construct(Greeting, ['zhangsan'])
 ```
 
-6. Reflect.getProptotypeOf(obj)
+-	6. Reflect.getProptotypeOf(obj)
 Reflect.getPrototypeOf 方法用于读取对象的__proto__属性, 对应Object.getPrototypeOf(obj)
 ```js
 const myObj = new FancyThing()
@@ -273,7 +273,7 @@ Object.getPrototypeOf(1) // Number([[PrimitiveValue]]: 0)
 Reflect.getPrototypeOf(1) // error
 ```
 
-7. Reflect.setPrototypeOf(obj, newProto)
+-	7. Reflect.setPrototypeOf(obj, newProto)
 Reflect.setPrototypeOf 方法用于设置对象的__proto__属性,返回第一个参数对象, 对应Object.setPrototypeOf(obj, newProto)
 ```js
 const myObj = new FancyThing()
@@ -301,7 +301,7 @@ Reflect.setPrototypeOf(null, {})
 // TypeError: Reflect.setPrototypeOf called on non-object
 ```
 
-8. Reflect.apply(func, thisArg, args)
+-	8. Reflect.apply(func, thisArg, args)
 Reflect.apply 方法等同于Function.prototype.apply.call(func, thisArg, args), 用于绑定this对象后执行给定函数
 一般来说, 如果要绑定一个函数的this对象, 可以这样写fn.apply(obj, args), 但是如果函数定义了自己的apply方法, 就只能写成Function.prototype.apply.call(fn, obj, args), 采用Reflect对象可以简化成这种操作
 ```js
@@ -318,7 +318,7 @@ const oldest = Reflect.apply(Math.max, Math, ages)
 const type = Reflect.apply(Object.prototype.toString, youngest, [])
 ```
 
-9. Reflect.defineProperty(target, propertyKey, attributes)
+-	9. Reflect.defineProperty(target, propertyKey, attributes)
 Reflect.defineProperty方法基本等同于Object.defineProperty, 用来为对象定义属性. 未来, 后者会被逐渐废除, 现在开始就使用Reflect.defineProperty代替它.
 ```js
 function myDate () {}
@@ -335,7 +335,7 @@ Reflect.defineProperty(MyDate, 'now', {
 ```
 如果Reflect.defineProperty的第一个参数不是对象, 就会抛出错误. 比如Reflect.defineProperty(1, 'foo')
 
-10. Reflect.getOwnPropertyDescriptor(target, propertyKey)
+-	10. Reflect.getOwnPropertyDescriptor(target, propertyKey)
 Reflect.getOwnPropertyDescriptor 基本等同于Object.getOwnPropertyDescriptor, 用于的代指定属性的描述对象, 将来会替代掉后者.
 ```js
 var myObject = ()
@@ -352,7 +352,7 @@ var theDescriptor = Reflect.getOwnPropertyDescriptor(myObj, 'hidden')
 ```
 Reflect.getOwnPropertyDescriptor 和 Object.getOwnPropertyDescriptor的一个区别是, **如果第一个参数不是对象, 后者不会报错, 返回undefined, 而前者会抛出错误, 表示参数非法**
 
-11. Reflect.isExtensible(target)
+-	11. Reflect.isExtensible(target)
 Reflect.isExtensible 方法对应Object.isExtensible, 返回一个布尔值, 表示当前对象是否可扩展
 ```js
 const myObject = {}
@@ -368,7 +368,7 @@ Reflect.isExtensible(myObject) // true
 Object.isExtensible(1) // false
 Reflect.isExtensible(1) // error
 ```
-12. Reflect.preventExtensions(target)
+-	12. Reflect.preventExtensions(target)
 Reflect.preventExtensions对应Object.preventExtensions方法, 用于让一个对象变为不可扩展. 返回一个布尔值, 表示是否操作成功
 ```js
 var myObj = {}
@@ -391,7 +391,7 @@ Object.preventExtensions(1) // 1
 Reflect.preventExtensions(1) // error
 ```
 
-13. Reflect.ownKeys(target)
+-	13. Reflect.ownKeys(target)
 Reflect.ownKeys 方法用于返回对象的所有属性, 基本等同于Object.getOwnPropertyNames 与 Object.getOwnPropertySymbols之和
 ```js
 var myObject = {
