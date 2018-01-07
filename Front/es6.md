@@ -1,3 +1,5 @@
 [my code](./es6Learning)
 
--   [Reflect](./es6Notes/Reflect.md)
+**Index**
+13. [Reflect](./es6Notes/Reflect.md)
+14. [Promise](./es6Notes/Promise.md)
