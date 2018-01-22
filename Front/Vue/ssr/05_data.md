@@ -41,6 +41,6 @@ import App from './App.vue'
 import { createRouter } from './router'
 import { sync } from 'vuex-router-sync'
 export function createApp() {
-  // https://ssr.vuejs.org/zh/routing.html#
+  // https://ssr.vuejs.org/zh/data.html#
 }
 ```
