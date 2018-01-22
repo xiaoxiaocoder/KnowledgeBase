@@ -92,3 +92,28 @@ import Foo from './Foo.vue'
 const Foo = () => import('./Foo.vue')
 ```
 在Vue 2.5以下的版本中, 服务端渲染时异步组件只能用在路由组件上. 然而在2.5+的版本中, 得益于核心算法升级, 异步组件现在可以在应用中的任何地方使用.
+需要注意的是， **仍然需要在挂载app之前调用router.onReady**,因为路由器必须提前解析路由配置中的以部族间， 才能正确地调用组件中可能存在到路由钩子。 这一步我们已经在服务器入口（server entry）中实现过了， 现在我们只需要更新客户端入口（client entry）
+```js
+// entry-client.js
+import { createApp } from './app'
+const { app, router } = createApp()
+router.onReady(() => {
+    app.$mount('#app')
+})
+```
+异步路由组件的路由配置示例：
+```js
+// router.js
+import Vue from 'vue'
+import Router from 'vue-router'
+Vue.use(Router)
+export function createRouter() {
+    return new Router({
+        mode: 'history',
+        routes: [
+            { path: '/', component: () => import('./components/Home.vue') },
+            { path: '/item/:id', component: () => import('./components/Item.vue')}
+        ]
+    })
+}
+```
