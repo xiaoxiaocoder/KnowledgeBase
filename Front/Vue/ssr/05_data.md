@@ -39,8 +39,89 @@ export function createStore () {
 import Vue from 'vue'
 import App from './App.vue'
 import { createRouter } from './router'
+import { createStore } from './store'
 import { sync } from 'vuex-router-sync'
 export function createApp() {
-  // https://ssr.vuejs.org/zh/data.html#
+  // 创建router 和 store实例
+  const router = createRouter()
+  const store = createStore()
+  // 同步路由状态(route state)到store
+  sync(store, router)
+  const app = new Vue({
+    router,
+    store,
+    render: h => h(App)
+  })
+  // 暴露app, router 和 store
+  return { app, router, store }
+}
+```
+
+## 带有逻辑配置的组件(Logic Collocation with Components)
+**在哪里放置"dispatch 数据预取action"的代码**
+我们需要通过访问路由, 来决定获取哪部分数据 - 这也决定了哪些组件需要渲染. 事实上, 给定路由所需的数据, 也是在该路由上渲染组件时所需的数据. 所以在路由中放置数据预取逻辑, 是很自然的事情.
+我们将在路由组件上暴露出一个自定义静态函数asyncData. 注意, **由于此函数会在组件实例化前调用, 所以它无法访问this. 需要将store和路由信息作为参数传递进去:**
+```html
+<!-- Item.vue -->
+<template>
+  <div> {{ item.title }}  </div>
+</template>
+<script>
+export default {
+  asyncData ({store, route}) {
+    // 触发action后, 会返回Promise
+    return store.dispatch('fetchItem', route.params.id)
+  },
+  computed: {
+    // 从Store的state对象中获取item
+    item () {
+      return this.$store.state.items[this.$route.params.id]
+    }
+  }
+}
+</script>
+```
+
+## 服务器端数据预取(Server Data Fetching)
+在entry-server.js中, 我们可以通过路由获得与router.getMatchedComponents() 相匹配的组件, 如果组件暴露出asyncData, 我们就调用这个方法. 然后我们需要将解析完成的状态, 附加到渲染上下文(render context)中.
+```js
+// entry-server.js
+import { createApp } from './app'
+export default context => {
+  return new Promise((resolve, reject) => {
+    const { app, router, store } = createApp()
+    router.push(context.url)
+    router.onReady(() => {
+      const matchedComponents = router.getMatchedComponents()
+      if(!matchedComponents.length){
+        return reject({code: 404})
+      }
+      // 对所有匹配的路由组件调用 asyncData()
+      Promise.all(matchedComponents.map(Component => {
+        if(Component.asyncData) {
+          return Component.asyncData({
+            store,
+            route: router.currentRoute
+          })
+        }
+      })).then(() => {
+        // 在所有预取钩子(preFetch hook) resolve后,
+        // 我们的sore现在已经填充如渲染程序所需的状态.
+        // 当我们将状态附加到上下文
+        // 并且template 选项用于 renderer时,
+        // 状态将自动序列化为 window.__INITIAL_STATE__,并且注入到HTML
+        context.state = store.state
+        resolve(app)
+      }).catch(reject)
+    }, reject)
+  })
+}
+```
+当使用template时, context.state将作为window.__INITIAL_STATE__状态, 自动嵌入到最终的HTML中. 而在客户端, 在挂载到应用程序之前, store就应该获取到状态:
+```js
+// entry-client.js
+const { app, router, store } = createApp()
+if(windwo.__INITIAL_STATE__){
+  store.replaceState(winodw.__INITIAL_STATE__)
 }
 ```
